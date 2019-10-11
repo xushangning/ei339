@@ -1,0 +1,55 @@
+\documentclass[a4paper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{CJK}
+
+\title{Report for EI339 Artificial Intelligence: Homework 2}
+\author{517030910384 徐尚宁}
+\date{}
+
+\begin{document}
+
+\begin{CJK}{UTF8}{gbsn}
+    \maketitle
+\end{CJK}
+
+\section*{Q1}
+
+We can formulate the maze problem as a state-space search problem, where each
+square $(x, y)$ on the coordinate system is a state and moving between adjacent
+squares has a constant action cost. Some squares on the map are unreachable, to
+which neighboring squares/states can not transition to. All reachable squares
+constitute our state space.
+
+Note that in our coordinate system, the vertical axis is the $x$-axis and the
+horizontal $y$-axis. And unlike the coordinate system of the maze map given in
+the handout, each square has a coordinate, but not each point, so for example,
+the lower right ``entrance'' square has the coordinate $(27, 40)$.
+
+\section*{Q2}
+
+In our formulation, there will be cycles and all action costs are constant and
+positive, so we choose BFS and A* search to find the optimal path.
+\begin{enumerate}
+    \item BFS visits each state in a ``breath-first'' manner. Its time
+    complexity is $O(b^d)$ for branching factor $b$ and the length of the
+    optimal path $d$ to the maze exit.
+    \item The A* search is equipped with a heuristics from the relaxed problem
+    where all walls in the maze are removed. The heuristics for square $(x, y)$
+    is defined to be the $L_1$ distance between the square itself and the exit,
+    that is
+    \[
+        h(x, y) = 26 - x + 39 - y
+    \]
+
+    The time complexity for A* is $O(n\log n)$, where $n$ is the number of
+    squares closer to the entrance than the exit.
+\end{enumerate}
+
+\section*{Q3}
+
+We choose to implement the BFS algorithm because intuitively, it seems that
+nearly all squares are closer to the entrance than the exit, and we want to
+verify this hypothesis.
+
+\end{document}
