@@ -2,26 +2,35 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpathes
 
+
 class MazeProblem:
-    def __init__(self, maze_file = ''):
-        self.map = self.loadMap(maze_file)
-    def loadMap(self, file):
-        # Load map txt as matrix.
-        # 0: path, 1: obstacle, 2: start point, 3: end point
-        f = open(file)
-        lines = f.readlines()
-        numOfLines = len(lines)
-        returnMap = np.zeros((numOfLines, 40))
-        A_row = 0
-        for line in lines:
-            list = line.strip().split(' ')
-            returnMap[A_row:] = list[0:40]
-            A_row += 1
-        print(np.shape(returnMap))
-        return returnMap
-    def drawMap(self):
-        # Visulize the maze map.
-        # Draw obstacles(1) as red rectangles. Draw path(0) as white rectangles. Draw starting point(2) and ending point(3) as circles.
+    def __init__(self, maze_file=''):
+        self.map = self.load_map(maze_file)
+
+    @staticmethod
+    def load_map(file):
+        """
+        Load map txt as matrix.
+
+        0: path, 1: obstacle, 2: start point, 3: end point
+        :1 file: str
+        :return: np.ndarray
+        """
+        return_map = []
+        with open(file) as f:
+            for line in f:
+                row = [int(x) for x in line.rstrip('\n').split(' ')]
+                return_map.append(row)
+        return_map = np.array(return_map)
+        return return_map
+
+    def draw_map(self):
+        """
+        Visualize the maze map.
+
+        Draw obstacles(1) as red rectangles. Draw path(0) as white rectangles.
+        Draw starting point(2) and ending point(3) as circles.
+        """
         rowNum = len(self.map)
         print(rowNum)
         colNum = len(self.map[0])
@@ -56,10 +65,7 @@ class MazeProblem:
         # Save maze image.
         plt.savefig('./maze.jpg')
 
+
 if __name__ == "__main__":
-    Solution = MazeProblem(maze_file = 'maze.txt')
-    Solution.drawMap()
-
-
-
-
+    Solution = MazeProblem(maze_file='maze.txt')
+    Solution.draw_map()
