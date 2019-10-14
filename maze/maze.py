@@ -1,4 +1,5 @@
 from collections import deque
+import os
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -90,6 +91,9 @@ class MazeProblem:
         ax.invert_yaxis()
 
     def bfs(self):
+        if not os.path.exists('output'):
+            os.mkdir('output')
+
         max_x, max_y = self._map.shape
         self._discovered[0, 0] = True
         queue = deque(((0, 0, 0),))
