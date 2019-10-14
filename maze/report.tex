@@ -22,9 +22,9 @@ which neighboring squares/states can not transition to. All reachable squares
 constitute our state space.
 
 Note that in our coordinate system, the vertical axis is the $x$-axis and the
-horizontal $y$-axis. And unlike the coordinate system of the maze map given in
-the handout, each square has a coordinate, but not each point, so for example,
-the lower right ``entrance'' square has the coordinate $(27, 40)$.
+horizontal $y$-axis. Each square's coordinate is defined to be its upper left
+corner's coordinate. For example, the lower right ``exit'' square has the
+coordinate $(26, 39)$.
 
 \section*{Q2}
 
@@ -39,7 +39,7 @@ positive, so we choose BFS and A* search to find the optimal path.
     is defined to be the $L_1$ distance between the square itself and the exit,
     that is
     \[
-        h(x, y) = 26 - x + 39 - y
+        h(x, y) = x + y
     \]
 
     The time complexity for A* is $O(n\log n)$, where $n$ is the number of
