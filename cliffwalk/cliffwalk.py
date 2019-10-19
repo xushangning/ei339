@@ -74,19 +74,21 @@ class Environment(object):
         for pos in reward_pos:
             self.env[pos[0]][pos[1]] = 3
 
-    def show_env(self):
-        # fig = plt.figure()
-        ax = plt.subplot()
-        plt.xlim((0, self.cols))
-        plt.ylim((0, self.rows))
+    def plot(self):
+        """
+        :return: matplotlib.figure.Figure
+        """
+        fig, ax = plt.subplots()
+        ax.set_xlim(0, self.cols)
+        ax.set_ylim(0, self.rows)
         # name: start, terminal, cliff, barrier, reward, others
         # number: 1, 2, -1, -2, 3, 0
         # color: yellow, orange, gray, black, red, white
         color_dict = {-1:"gray", 1:"yellow", 2:"orange", -2:"black", 3:"red", 0:"white"}
         my_x_ticks = np.arange(0, self.cols, 1)
         my_y_ticks = np.arange(0, self.rows, 1)
-        plt.xticks(my_x_ticks)
-        plt.yticks(my_y_ticks)
+        ax.set_xticks(my_x_ticks)
+        ax.set_yticks(my_y_ticks)
         x_major_locator = MultipleLocator(1)
         y_major_locator = MultipleLocator(1)
         ax.xaxis.set_major_locator(x_major_locator)
@@ -94,14 +96,14 @@ class Environment(object):
         ax.xaxis.set_ticks_position('top')
         ax.invert_yaxis()
 
-        plt.grid()
+        ax.grid()
         for i in range(self.rows):
             for j in range(self.cols):
                 color = color_dict[int(self.env[i][j])]
-                rect = mpatches.Rectangle([j, i], 1, 1, color=color)
+                rect = mpatches.Rectangle((j, i), 1, 1, color=color)
                 ax.add_patch(rect)
-        # plt.savefig('./cliffwalk.jpg')
-        plt.show()
+
+        return fig
 
 
 class Sarsa():
@@ -123,7 +125,7 @@ if __name__ == "__main__":
     Env = Environment()
     print("the environment matrix:")
     print(Env.env)
-    Env.show_env()
+    Env.plot()
 
     sarsa = Sarsa(Env)
     # sarsa.learning(max_episode_num=300)
