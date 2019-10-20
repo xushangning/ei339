@@ -80,7 +80,7 @@ class Environment(object):
         """
         :return: matplotlib.figure.Figure
         """
-        fig, ax = plt.subplots()
+        fig, ax = plt.subplots(figsize=(8, 6))
         ax.set_xlim(0, self.cols)
         ax.set_ylim(0, self.rows)
         # name: start, terminal, cliff, barrier, reward, others
@@ -104,30 +104,105 @@ class Environment(object):
                 color = color_dict[int(self.env[i][j])]
                 rect = mpatches.Rectangle((j, i), 1, 1, color=color)
                 ax.add_patch(rect)
-
         return fig
+
+    def valid_position(self, x, y):
+        """(x, y) can't be outside the environment or on a barrier"""
+        return 0 <= x < self.cols and 0 <= y < self.rows and self.env[y][x] != -2
 
 
 class Sarsa():
     def __init__(self, env):
-        self.env = env.env
+        self.env = env
+        self.map = env.env
         self.rows = env.rows
         self.cols = env.cols
+        self.fig = env.plot()
 
     # sarsa learning
-    def learning(self, max_episode_num, gamma=0.9):
+    def learning(self, n_episodes, gamma=0.9):
         """
-        :param max_episode_num: total episode num
+        :param n_episodes: total episode num
         :param gamma: the discount factor
         """
-        print("sarsa learning")
+        ax = self.fig.axes[0]
+        for i in range(self.rows):
+            for j in range(self.cols):
+                if not self.map[i][j]:
+                    ax.add_patch(mpatches.Polygon(
+                        ((j, i), (j + 0.5, i + 0.5), (j + 1, i)),
+                        fill=False,
+                        color='black'
+                    ))
+                    ax.add_patch(mpatches.Polygon(
+                        ((j + 1, i), (j + 1, i + 1), (j + 0.5, i + 0.5)),
+                        fill=False,
+                        color='black'
+                    ))
+                    ax.add_patch(mpatches.Polygon(
+                        ((j + 1, i + 1), (j, i + 1), (j + 0.5, i + 0.5)),
+                        fill=False,
+                        color='black'
+                    ))
+                    ax.add_patch(mpatches.Polygon(
+                        ((j, i), (j + 0.5, i + 0.5), (j, i + 1)),
+                        fill=False,
+                        color='black'
+                    ))
+
+        eta = 0.5
+        q_values = np.zeros((self.rows, self.cols, 4), np.float64)
+
+        for _ in range(n_episodes):
+            prev_action = random.randrange(4)
+            prev_x, prev_y = 0, 0
+            while True:
+                x, y = self.walk_one_step(prev_x, prev_y, prev_action)
+                if not self.env.valid_position(x, y):
+                    x, y = prev_x, prev_y
+
+                state_type = self.map[y][x]
+                reward = 0
+                if state_type == -1:
+                    reward = -100
+                elif state_type == 3:
+                    reward = -1
+                elif state_type == 2:
+                    reward = 10
+
+                action = random.randrange(4)
+                q_values[prev_y][prev_x][prev_action] = (
+                        (1 - eta) * q_values[prev_y][prev_x][prev_action]
+                    + eta * (reward + gamma * q_values[y][x][action])
+                )
+
+                if state_type == 2 or state_type == -1:
+                    break
+                prev_x, prev_y, prev_action = x, y, action
+
+        for i in range(self.rows):
+            for j in range(self.cols):
+                if not self.map[i][j]:
+                    ax.text(j + 0.3, i + 0.25, '{:.1f}'.format(q_values[i][j][0]))
+                    ax.text(j + 0.6, i + 0.55, '{:.1f}'.format(q_values[i][j][1]))
+                    ax.text(j + 0.3, i + 0.95, '{:.1f}'.format(q_values[i][j][2]))
+                    ax.text(j + 0.03, i + 0.55, '{:.1f}'.format(q_values[i][j][3]))
+        self.fig.show()
+
+    @staticmethod
+    def walk_one_step(x, y, direction):
+        """Walk one step in one of four directions"""
+        if direction == 0:      # up
+            return x, y - 1
+        elif direction == 1:    # right
+            return x + 1, y
+        elif direction == 2:    # down
+            return x, y + 1
+        else:                   # left
+            return x - 1, y
 
 
 if __name__ == "__main__":
     Env = Environment()
-    print("the environment matrix:")
-    print(Env.env)
-    Env.plot()
-
     sarsa = Sarsa(Env)
-    # sarsa.learning(max_episode_num=300)
+    sarsa.learning(5000)
