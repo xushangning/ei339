@@ -18,6 +18,8 @@ class Environment(object):
         Create the final matrix of environment in our problem
 
         start node = 1, terminal node = 2, cliff = -1, barrier = -2, reward = 3
+
+        All grids of type 3 now carry a reward of -1.
         [[1. - 1. - 1. - 1. - 1. - 1. - 1.  2.]
         [0.  0.  0.  0.  0.  0. - 2.  0.]
         [0.  0.  0.  3. - 2.  0.  0.  0.]
