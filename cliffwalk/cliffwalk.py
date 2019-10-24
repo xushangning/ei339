@@ -160,7 +160,7 @@ class Sarsa():
                         + eta * (reward + gamma * q_values[y][x][action])
                     )
 
-                    if state_type == 2 or state_type == -1:
+                    if state_type == 2:
                         break
                     prev_x, prev_y, prev_action = x, y, action
 
