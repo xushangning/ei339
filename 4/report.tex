@@ -1,0 +1,82 @@
+\documentclass[a4paper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{CJK}
+\usepackage{amsthm}
+
+\title{Report for EI339 Artificial Intelligence: Homework 4}
+\author{517030910384 徐尚宁}
+\date{}
+
+\begin{document}
+
+\begin{CJK}{UTF8}{gbsn}
+    \maketitle
+\end{CJK}
+
+\section*{Q1}
+
+Only when the white piece is adjacent to the black at the start can A win the
+game.
+
+\begin{proof}
+    When the white and the black piece are adjacent to each other. A can simply
+    move its piece to eat their opponent.
+
+    Otherwise, A is doomed to lose. We prove this claim with induction on the
+    the $L_1$ distance $d \geq 2$ between the white and black piece.
+
+    When $d = 2$, there are two states for the chessboard: either the white is
+    adjacent to the black diagonally, or they form a straight line. A can't move
+    its piece towards the black piece (that is, choose a move that decreases the
+    $L_1$ distance), because doing so in either case will allow the black piece
+    to directly eat the white. Suppose that the two pieces are on a chessboard
+    without boundary. For the white piece to survive, A will move it away from
+    the black. We give a strategy for B on how to move with regard to each of
+    the two cases.
+
+    In the latter case, the white and black form a straight line. No matter how
+    A moves, B just needs to move its piece along the straight line for one step
+    towards the white. If A's move was along the line, B's move will keep the
+    two pieces in the same relative position. Or if A moved its piece
+    perpendicular to the line, B's move will make the black piece diagonally
+    adjacent to the white, identical to the former case.
+
+    In the former case, B needs to imitate A's move to maintain their relative
+    position. If the chessboard has no boundary, the strategy described above
+    essentially leads to a draw, but the chessboard size is finite. The black
+    piece will at some time encounter the boundary and, if the black and white
+    are on a straight line, the black are forced to move sideways, leading to
+    the former case.
+
+    The game concludes when the white piece has no way to retreat.
+
+    If B wins the game for $d = k$, then for $d = k + 1$, if A moves its piece
+    towards the black, or B just moves its piece in any direction for 2 grids.
+    Both action will decrease $d$ by one, and then B just follows the strategy
+    for $d = k$.
+
+    Such a move is always possible for B at the 2nd round, because for $d > 2$,
+    the rectangle formed with the black and white piece as its corners always
+    has one side whose length is greater than 2. The black piece just needs to
+    move in that direction.
+\end{proof}
+
+\section*{Q2}
+
+As it can be seen from the proof above, if A is doomed to lose, the white piece
+will try to retreat to a corner such that
+\begin{enumerate}
+    \item the white piece can moves there faster than the black piece
+    \item it has the maximum distance to the white piece among all corners that
+    satisfy 1.
+\end{enumerate}
+
+Then, the white piece will move between the corner and its adjacent grid as not
+to voluntarily come closer to the black.
+
+Since essentially both the black and the white are moving to a corner, the
+maximum number of rounds are bounded from above by two sides of the chessboard
+i.e. $2n$ each for the black and the white, so $K \leq 4n$.
+
+\end{document}
