@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 n = 0
 
 
@@ -48,6 +50,7 @@ def next_black_positions(r: int, c: int):
         yield r, c
 
 
+@lru_cache(None)
 def value(r1: int, c1: int, r2: int, c2, depth: int, is_max: bool) -> int:
     """
     reward = 100 if B wins and reward = -100 if A wins. Every round incurs a
