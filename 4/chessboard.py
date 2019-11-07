@@ -1,11 +1,11 @@
 n = 0
 
 
-def valid_position(r, c):
+def valid_position(r: int, c: int) -> bool:
     return 0 <= r < n and 0 <= c < n
 
 
-def next_white_positions(r, c):
+def next_white_positions(r: int, c: int):
     """
     The generator for the white piece's next positions, given its position
     (r, c).
@@ -25,7 +25,7 @@ def next_white_positions(r, c):
         yield r, c
 
 
-def next_black_positions(r, c):
+def next_black_positions(r: int, c: int):
     """
     The generator for the black piece's next positions, given its position
     (r, c). The black piece has at most 8 possible next positions.
@@ -48,7 +48,7 @@ def next_black_positions(r, c):
         yield r, c
 
 
-def value(r1, c1, r2, c2, depth, is_max):
+def value(r1: int, c1: int, r2: int, c2, depth: int, is_max: bool) -> int:
     """
     reward = 100 if B wins and reward = -100 if A wins. Every round incurs a
     reward of -1.
