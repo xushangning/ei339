@@ -1,6 +1,5 @@
 \documentclass[a4paper]{article}
 
-\usepackage[margin=1in]{geometry}
 \usepackage{CJK}
 \usepackage{amsthm}
 
@@ -23,43 +22,105 @@ game.
     When the white and the black piece are adjacent to each other. A can simply
     move its piece to eat their opponent.
 
-    Otherwise, A is doomed to lose. We prove this claim with induction on the
-    the $L_1$ distance $d \geq 2$ between the white and black piece.
+    We claim that if A is about to move and the $L_1$ distance between the white
+    and black piece $d \geq 2$, then A will lose the game, which basically means
+    that A will lose as long as the white piece is not adjacent to the black at
+    the start.
 
-    When $d = 2$, there are two states for the chessboard: either the white is
-    adjacent to the black diagonally, or they form a straight line. A can't move
-    its piece towards the black piece (that is, choose a move that decreases the
-    $L_1$ distance), because doing so in either case will allow the black piece
-    to directly eat the white. Suppose that the two pieces are on a chessboard
-    without boundary. For the white piece to survive, A will move it away from
-    the black. We give a strategy for B on how to move with regard to each of
-    the two cases.
+    We propose the following strategy for B that leads to B's victory when $d
+    \geq 2$.
+    \begin{enumerate}
+        \item For $d = 2$ and it is A's turn to move, there are two cases:
+        \begin{itemize}
+            \item If the black and the white piece form a straight line, no
+            matter how the white moves, B just moves the black piece along the
+            line one grid at a time.
+            \item If the black is diagonally adjacent to the white, then B just
+            imitates A's last move.
+        \end{itemize}
+        \item For $d > 2$, and it is A's turn to move, there are two cases:
+        \begin{itemize}
+            \item If the white moves away from the black, then B chooses a
+            direction in which moving two grids will decrease $d$ by 2.
+            \item If the white moves towards the black, and after the move, it
+            is B's turn,
+            \begin{itemize}
+                \item If $d = 2$, either the black can simply eat the white when
+                they are on a straight line, or when they diagonally adjacent to
+                each other, the black piece moves two grids in a direction such
+                that before and after the move, $d$ doesn't change.
+                \item If $d = 3$, there must exist a direction in which the
+                black moves one grid and decreases $d$ by one.
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
 
-    In the latter case, the white and black form a straight line. No matter how
+    The full proof follows below.
+
+    When $d = 2$, there are two states for the chessboard: either the two pieces
+    form a straight line, or the white is adjacent to the black diagonally. A
+    can't move its piece towards the black piece (that is, choose a move that
+    decreases the $L_1$ distance), because doing so in either case will allow
+    the black piece to directly eat the white. Suppose that the two pieces are
+    on a chessboard without boundary. For the white piece to survive, A will
+    move it away from the black. We give a strategy for B on how to move with
+    regard to each of the two cases.
+
+    In the former case, the white and black form a straight line. No matter how
     A moves, B just needs to move its piece along the straight line for one step
     towards the white. If A's move was along the line, B's move will keep the
     two pieces in the same relative position. Or if A moved its piece
     perpendicular to the line, B's move will make the black piece diagonally
-    adjacent to the white, identical to the former case.
+    adjacent to the white, which transforms this case into the latter case.
 
-    In the former case, B needs to imitate A's move to maintain their relative
+    In the latter case, B needs to imitate A's move to maintain their relative
     position. If the chessboard has no boundary, the strategy described above
     essentially leads to a draw, but the chessboard size is finite. The black
-    piece will at some time encounter the boundary and, if the black and white
+    piece will at some point encounter the boundary and, if the black and white
     are on a straight line, the black are forced to move sideways, leading to
     the former case.
 
     The game concludes when the white piece has no way to retreat.
 
-    If B wins the game for $d = k$, then for $d = k + 1$, if A moves its piece
-    towards the black, or B just moves its piece in any direction for 2 grids.
-    Both action will decrease $d$ by one, and then B just follows the strategy
-    for $d = k$.
+    If B wins the game for $2 \leq d \leq k$, we want to prove that B still wins
+    for $d \leq k + 1$. For $d = k + 1$, there are two possibilities for A's
+    move: A can move the white piece towards or away from the black piece.
+    \begin{itemize}
+        \item If the white piece moves away from the black piece, then after A's
+        move, $d = k + 2 \geq 4$ because $k \geq 2$. In this case, there must
+        exist a direction in which the black piece can move 2 grids to decrease
+        $d$ by 2 to $k$. Consider the rectangle formed by the white and black
+        piece as its two opposite corners. Such rectangle must have one side
+        whose length is greater than 2 because the rectangle's perimeter is
+        equal to $d = k$. B moves its piece in such direction and then it is A's
+        turn and $d = k$, so B wins.
+        \item If the white piece moves towards the black piece, then $d = k$
+        after A's move. If $k \geq 4$, B can still apply the strategy above
+        because after such move, $d = k - 2 \geq 2$ and B wins.
 
-    Such a move is always possible for B at the 2nd round, because for $d > 2$,
-    the rectangle formed with the black and white piece as its corners always
-    has one side whose length is greater than 2. The black piece just needs to
-    move in that direction.
+        If, after A's move, $k < 4$, we have to separately discuss the cases for
+        $k = 2$ or 3. If $k = 3$, B just moves its piece one grid towards the
+        white piece so that at A's turn $d = 2$ and B wins. If $k = 2$, B will
+        make a decision based on the state of the chessboard. If the black and
+        white forms a straight line, the black piece can directly eats the
+        white. If the black is adjacent to the white diagonally, there must
+        exist a direction in which the white piece can move two grids such that
+        before and after the move the $L_1$ distance $d$ doesn't change. Because
+        after B's move, $d = 2$ and now it is A's turn, so B wins.
+
+        There is one case where such move is impossible, that is when the white
+        piece is at the corner, the black piece is diagonally adjacent to it and
+        it is B's turn. We argue that this scenario can't happen under the
+        assumption that A and B are rational. Because now it is B's turn, let
+        this turn be the $i$th turn and consider what is A's move in turn $i -
+        1$. Because the white piece can only move one grid at a time, the black
+        would have been adjacent to the white at turn $i - 1$. A should have
+        already won at turn $i - 1$ because the white can eat the black, and
+        since B is rational, they would not have moved the black piece next to
+        the white.
+    \end{itemize}
+    With the complete strategy for B outlined above, we conclude that A will
+    only win when $d = 1$.
 \end{proof}
 
 \section*{Q2}
