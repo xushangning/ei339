@@ -197,4 +197,17 @@ game.
     same time $2n$ rounds for A, so the total number of rounds $K \leq 4n$.
 \end{proof}
 
+\section*{Programming Part}
+
+For the programming part, we implement a vanilla version of minimax. For the
+chessboard problem, we use cache to speed up computation so that the result for
+$n = 20$ can be computed within a reasonable time. For the second problem, we
+implement $\alpha$-$\beta$ pruning. At least 3 edges must have been drawn so
+that the result can be computed within 1 minute.
+
+Our implementation closely mirrors the algorithm given in Berkeley's slides and
+runs up to only 110 lines of code. The code has been fully annotated. For these
+reasons, we do not duplicate the code below and we recommend reading the code
+itself instead.
+
 \end{document}
