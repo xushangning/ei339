@@ -2,6 +2,10 @@
 
 \usepackage{CJK}
 \usepackage{amsthm}
+\usepackage{tikz}
+
+\theoremstyle{definition}
+\newtheorem{lemma}{Lemma}
 
 \title{Report for EI339 Artificial Intelligence: Homework 4}
 \author{517030910384 徐尚宁}
@@ -125,19 +129,72 @@ game.
 
 \section*{Q2}
 
-As it can be seen from the proof above, if A is doomed to lose, the white piece
-will try to retreat to a corner such that
-\begin{enumerate}
-    \item the white piece can moves there faster than the black piece
-    \item it has the maximum distance to the white piece among all corners that
-    satisfy 1.
-\end{enumerate}
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}
+        \draw[step=0.8cm] (0, 0) grid (5.6, 5.6);
+        \draw (2.8, 1.2) circle [radius=0.3cm];
+        \fill (4.4, 4.4) circle [radius=0.3cm];
+        \draw (0, 0) node [anchor=north east] {$c_1$};
+        \draw (5.6, 0) node [anchor=north west] {$c_2$};
+        \draw (5.6, 5.6) node [anchor=south west] {$c_3$};
+        \draw (0, 5.6) node [anchor=south east] {$c_4$};
+        \draw [<->] (2.8, 4.4) -- node [above] {$l_1$} (4.4, 4.4);
+        \draw [<->] (2.8, 1.2) -- node [left] {$l_2$} (2.8, 4.4);
+    \end{tikzpicture}
+    \caption{Illustration for Q2's proof.}
+    \label{fig:q2-proof-illustration}
+\end{figure}
 
-Then, the white piece will move between the corner and its adjacent grid as not
-to voluntarily come closer to the black.
+\begin{proof}
+    We impose a left-hand coordinate system on the chessboard, with the origin
+    at the lower left corner $c_1$. Similar to the proof in Q1, we give an
+    strategy for B to bound the total number of rounds from above. Consider
+    again the rectangle formed by the two pieces as its opposite corners, like
+    the rectangle bounded by two sides $l_1$ and $l_2$ in
+    Figure~\ref{fig:q2-proof-illustration}. Our strategy for B is that the black
+    piece should walk two grids along the direction of the longer side of the
+    rectangle i.e. $l_2$, until either
+    \begin{enumerate}
+        \item it is B's turn and walking two grids this turn will make the two
+        pieces form a $2 \times 1$ rectangle. In this case, the black piece
+        should walks one grid along the side with length 2, making the rectangle
+        a square.
+        \item Or, walking one grid at B's turn can make $l_1 = l_2$. The black
+        piece should walk one grid at that turn.
+        \item Or, the rectangle formed by the two pieces is now a square. After
+        this point, the black piece will force the white piece into a corner,
+        walking one or two grids at a time.
+    \end{enumerate}
 
-Since essentially both the black and the white are moving to a corner, the
-maximum number of rounds are bounded from above by two sides of the chessboard
-i.e. $2n$ each for the black and the white, so $K \leq 4n$.
+    Our strategy is termed as ``maintain the square'', that is, B seeks to make
+    the rectangle a square as quickly as possible and maintain the square until
+    the white piece is cornered. In the rest of the proof, we explain how the
+    strategy gives an upper bound of $4n$.
+
+    Consider the example given in Figure~\ref{fig:q2-proof-illustration}, where
+    $l_1 < l_2$. We term the corners $c_3$ and $c_4$ as the \emph{impossible}
+    corners because at the game's start, A realizes that it cannot reach $c_3$
+    and $c_4$ in any means. By contrast, $c_1$ and $c_2$ are the \emph{possible}
+    corners to which the white piece may retreat.
+
+    Our strategy gives the following guarantee:
+    \begin{lemma}
+        Before $l_1 = l_2$, the black piece only walks in one direction.
+    \end{lemma}
+
+    Once $l_1 = l_2$, there is only one corner to which the white piece may
+    retreat. The rectangle formed by that corner and the black piece as its
+    opposite corners will \emph{cover} the white piece, and the white piece will
+    never be able to escape this rectangle, because the black piece always walks
+    faster. The strategy for B after $l_1 = l_2$ is quite flexible as it can
+    move the piece one or two grids, but as it has been proved in Q1, B will
+    win.
+
+    The key idea of this strategy is that the black piece is essentially moving
+    into a corner from its start position, no matter how A moves. For the black
+    piece to move into a corner, we need at most $2n$ rounds for B, and at the
+    same time $2n$ rounds for A, so the total number of rounds $K \leq 4n$.
+\end{proof}
 
 \end{document}
